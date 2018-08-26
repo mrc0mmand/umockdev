@@ -61,5 +61,13 @@ make -j4
 make check-valgrind
 make -j4 distcheck
 EOU
+
+# install and run check-installed
+make -C /build/src install
+ldconfig
+su - buildd <<EOU
+cd /build/src
+make check-installed
+EOU
 EOF
 cp "$CHROOT"/build/src/umockdev-*.tar.xz .
