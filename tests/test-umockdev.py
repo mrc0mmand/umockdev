@@ -190,12 +190,17 @@ A: simple_attr=1
             self.assertEqual(f.read(), b'\x41\xFF\x00\x05\xFF\x00')
 
     def test_add_from_string_errors(self):
+        if sys.version_info[0] == 2 or (sys.version_info[0] == 3 and sys.version_info[1] < 2):
+            assertRaisesRegex = self.assertRaisesRegexp
+        else:
+            assertRaisesRegex = self.assertRaisesRegex
+
         # does not start with P:
-        with self.assertRaisesRegex(GLib.GError, 'must start with.*P:') as cm:
+        with assertRaisesRegex(GLib.GError, 'must start with.*P:') as cm:
             self.testbed.add_from_string ('E: SIMPLE_PROP=1\n')
 
         # no value
-        with self.assertRaisesRegex(GLib.GError, 'malformed attribute') as cm:
+        with assertRaisesRegex(GLib.GError, 'malformed attribute') as cm:
             self.testbed.add_from_string ('P: /devices/dev1\nE: SIMPLE_PROP\n')
 
 unittest.main(testRunner=unittest.TextTestRunner(stream=sys.stdout, verbosity=2))
